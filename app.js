@@ -1,6 +1,9 @@
 
-//Importamos Express tras instalarlo vía NPM
-var express = require('express');
+var express = require("express");
+var app = express();
+var bodyParser = require("body-parser");
+var methodOverride = require("method-override");
+var mongoose = require('mongoose');
 
 // Definimos App como la función del módulo Express
 var App = express();
