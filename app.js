@@ -57,7 +57,6 @@ app.use(router);
 
 
 // Start server
-const port = process.env.PORT || 3000  
-app.listen(port, function () {
+app.listen(3000, function () {
     console.log("Node server running on http://localhost:3000");
 });
