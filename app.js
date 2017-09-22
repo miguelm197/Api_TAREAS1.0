@@ -1,74 +1,28 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
-var methodOverride = require("method-override");
-var mongoose = require('mongoose');
 
+//Importamos Express tras instalarlo vía NPM
+var express = require('express');
 
-// Conexión a la Base de Datos
-mongoose.connect('mongodb://localhost/BDtareas', function (err, res) {
-    if (err) throw err;
-    console.log('Conectado a la Base de Datos');
-});
+// Definimos App como la función del módulo Express
+var App = express();
 
-//ESTO PERMITE RECIBIR PETICIONES FUERA DE ESTE DOMINIO
-function perimitirCrossDomain(req, res, next) {
-    //en vez de * se puede definir SÓLO los orígenes que permitimos
-    res.header('Access-Control-Allow-Origin', '*');
-    //metodos http permitidos para CORS
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-}
-
-// Middlewares
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(methodOverride());
-app.use(perimitirCrossDomain);
-
-
-// Imports de Modelo y Controlador
-var modelo = require('./models/mdl_tarea')(app, mongoose);
-var CtrlTarea = require('./controllers/tareas');
-
-
-function getHTML(req, res) {
-    res.sendFile('./index.html', options, (err) => {
-        if (err) throw err;
-        console.log('Sirviendo index.html')
-    })
-};
-
+// Definimos algunas variables que usaremos en las distintas funciones
 var port = process.env.PORT || 3000;
 var options = {
-    root: __dirname
+  root: __dirname
 };
 
+// Definimos funciones para luego usarlas al recibir una petición en el router
+function getHTML(req, res) {
+  res.sendFile('./index.html', options, (err) => {
+    if (err) throw err;
+    console.log('Sirviendo index.html')
+  })
+};
 
-// Ruteo
-var router = express.Router();
+// Definimos las rutas
+App.get('/', getHTML);
 
-app.get('/', getHTML);
-
-router.route('/tareas')
-    .get(CtrlTarea.consultaTareas)
-    .post(CtrlTarea.agregarTarea);
-
-
-router.route('/tareas/:id')
-    // .get(CtrlTarea.findById)
-    // .put(CtrlTarea.updateTVShow)
-    .delete(CtrlTarea.eliminarTarea);
-
-app.use(router);
-
-
-
-// Start server
-var port = process.env.PORT || 3000
-app.listen(port, function () {
-    console.log('Aplicacion escuchando en el puerto: ' + port)
+// Escuchamos el puerto de Express
+App.listen(port, function () {
+  console.log('Aplicacion escuchando en el puerto: ' + port)
 });
-
-
