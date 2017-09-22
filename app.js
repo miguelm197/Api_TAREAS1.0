@@ -5,6 +5,13 @@ var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var mongoose = require('mongoose');
 
+
+// Conexión a la Base de Datos
+mongoose.connect('mongodb://<dbuser>:<dbpassword>@ds147274.mlab.com:47274/bdtareas', function (err, res) {
+    if (err) throw err;
+    console.log('Conectado a la Base de Datos');
+});
+
 // Definimos App como la función del módulo Express
 var App = express();
 
