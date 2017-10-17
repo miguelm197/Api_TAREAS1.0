@@ -33,6 +33,8 @@ exports.agregarTarea = function (req, res) {
     });
 };
 
+
+
 //DELETE - Eliminar una tarea de la Base de Datos
 exports.eliminarTarea = function (req, res) {
     SCH_Tarea.findById(req.params.id, function (err, tarea) {

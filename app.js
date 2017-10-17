@@ -1,4 +1,3 @@
-
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
@@ -7,32 +6,59 @@ var mongoose = require('mongoose');
 
 
 // Conexión a la Base de Datos
-mongoose.connect('mongodb://<dbuser>:<dbpassword>@ds147274.mlab.com:47274/bdtareas', function (err, res) {
+mongoose.connect('mongodb://admin:admin@ds147274.mlab.com:47274/bdtareas', function (err, res) {
     if (err) throw err;
     console.log('Conectado a la Base de Datos');
 });
 
-// Definimos App como la función del módulo Express
-var App = express();
+//ESTO PERMITE RECIBIR PETICIONES FUERA DE ESTE DOMINIO
+function perimitirCrossDomain(req, res, next) {
+    //en vez de * se puede definir SÓLO los orígenes que permitimos
+    res.header('Access-Control-Allow-Origin', '*');
+    //metodos http permitidos para CORS
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
 
-// Definimos algunas variables que usaremos en las distintas funciones
-var port = process.env.PORT || 3000;
-var options = {
-  root: __dirname
-};
+// Middlewares
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(methodOverride());
+app.use(perimitirCrossDomain);
 
-// Definimos funciones para luego usarlas al recibir una petición en el router
-function getHTML(req, res) {
-  res.sendFile('./index.html', options, (err) => {
-    if (err) throw err;
-    console.log('Sirviendo index.html')
-  })
-};
 
-// Definimos las rutas
-App.get('/', getHTML);
+// Imports de Modelo y Controlador
+var modelo = require('./models/mdl_tarea')(app, mongoose);
+var CtrlTarea = require('./controllers/tareas');
 
-// Escuchamos el puerto de Express
-App.listen(port, function () {
-  console.log('Aplicacion escuchando en el puerto: ' + port)
+
+// Ruteo
+var router = express.Router();
+
+
+router.get('/', function (req, res) {
+    res.send("Que tal sabandijas!");
 });
+
+router.route('/tareas')
+    .get(CtrlTarea.consultaTareas)
+    .post(CtrlTarea.agregarTarea);
+
+
+router.route('/tareas/:id')
+    // .get(CtrlTarea.findById)
+    // .put(CtrlTarea.updateTVShow)
+    .delete(CtrlTarea.eliminarTarea);
+
+app.use(router);
+
+
+
+// Start server
+var port = process.env.PORT || 3000  
+app.listen(port, function () {
+    console.log("Node server running on http://localhost:3000");
+});
+
+
