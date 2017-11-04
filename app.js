@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 
 
 // Conexión a la Base de Datos
-mongoose.connect('mongodb://admin:admin@ds147274.mlab.com:47274/bdtareas', function (err, res) {
+mongoose.connect('mongodb://admin:admin@ds147274.mlab.com:47274/bdtareas?authSource=bdtareas', function (err, res) {
     if (err) throw err;
     console.log('Conectado a la Base de Datos');
 });
