@@ -41,6 +41,10 @@ router.get('/', function (req, res) {
     res.send("Que tal sabandijas!");
 });
 
+router.get('/hola', function (req, res) {
+    res.send("Hola desgraciao!");
+});
+
 router.route('/tareas')
     .get(CtrlTarea.consultaTareas)
     .post(CtrlTarea.agregarTarea);
