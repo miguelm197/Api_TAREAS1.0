@@ -8,6 +8,7 @@ var SCH_Tarea = mongoose.model('mdl_Tarea');
 
 //GET - Retorna todas las Tareas de la Base de Datos
 exports.consultaTareas = function (req, res) {
+    res.status(200).jsonp("sapeeee");
     SCH_Tarea.find(function (err, tareas) {
         if (err) res.send(500, err.message);
         console.log('GET /tareas');
